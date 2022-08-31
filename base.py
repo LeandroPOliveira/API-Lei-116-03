@@ -1,9 +1,11 @@
 from fastapi import FastAPI, Path
+from typing import List, Optional
 import pyodbc
+from pydantic import BaseModel
 
 app = FastAPI()
 
-lmdb = r'C:\Users\loliveira\PycharmProjects\API\lista_servicos.accdb;'
+lmdb = r'C:\Users\loliveira\PycharmProjects\API\API-Lei-116\lista_servicos.accdb;'
 cnx = pyodbc.connect(r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'r'DBQ=' + lmdb)
 cursor = cnx.cursor()
 cursor.execute('select * from tabela_iss')
@@ -13,7 +15,21 @@ results = [tuple(str(item) for item in i) for i in cursor.fetchall()]
 column_names = [col[0] for col in desc]
 dados = [dict(zip(column_names, row)) for row in results]
 
-print(dados)
+
+class Item(BaseModel):
+    descricao: str
+    irrf: str
+    crf: str
+    inss: str
+    iss: str
+
+
+class UpdateItem(BaseModel):
+    descricao: Optional[str] = None
+    irrf: Optional[str] = None
+    crf: Optional[str] = None
+    inss: Optional[str] = None
+    iss: Optional[str] = None
 
 
 @app.get("/")
@@ -35,7 +51,7 @@ def get_item(
 
 
 @app.get('/por_descricao')
-def get_item(descricao: str):
+def get_item(descricao: Optional[str] = None):
     search = list(filter(lambda x: descricao in x["descricao"], dados))
 
     if not search:
@@ -45,9 +61,8 @@ def get_item(descricao: str):
 
 
 @app.post('/create-item/{cod_serv}')
-def create_item(cod_serv: int, item: Item):
-
-    search = list(filter(lambda x: x["id"] == cod_serv, dados))
+def create_item(cod_serv: str, item:Item):
+    search = list(filter(lambda x: x["servico"] == cod_serv, dados))
 
     if search:
         return {'Error': 'Item exists'}
@@ -60,7 +75,7 @@ def create_item(cod_serv: int, item: Item):
 
 
 @app.put('/update-item/{cod_serv}')
-def update_item(cod_serv: int, item: UpdateItem):
+def update_item(cod_serv: str, item: UpdateItem):
 
     search = list(filter(lambda x: x["servico"] == cod_serv, dados))
 
@@ -68,13 +83,25 @@ def update_item(cod_serv: int, item: UpdateItem):
         return {'Item': 'Does not exist'}
 
     if item.descricao is not None:
-        search[0]['descricao'] = item.name
+        search[0]['descricao'] = item.descricao
+
+    if item.irrf is not None:
+        search[0]['irrf'] = item.irrf
+
+    if item.crf is not None:
+        search[0]['crf'] = item.crf
+
+    if item.inss is not None:
+        search[0]['inss'] = item.inss
+
+    if item.iss is not None:
+        search[0]['iss'] = item.iss
 
     return search
 
 
 @app.delete('/delete-item/{cod_serv}')
-def delete_item(cod_serv: int):
+def delete_item(cod_serv: str):
     search = list(filter(lambda x: x["servico"] == cod_serv, dados))
 
     if not search:
