@@ -61,7 +61,7 @@ def get_item(descricao: Optional[str] = None):
 
 
 @app.post('/create-item/{cod_serv}')
-def create_item(cod_serv: str, item:Item):
+def create_item(cod_serv: str, item: Item):
     search = list(filter(lambda x: x["servico"] == cod_serv, dados))
 
     if search:
