@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-lmdb = r'C:\Users\loliveira\PycharmProjects\API\API-Lei-116\lista_servicos.accdb;'
+lmdb = 'lista_servicos.accdb;'
 cnx = pyodbc.connect(r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'r'DBQ=' + lmdb)
 cursor = cnx.cursor()
 cursor.execute('select * from tabela_iss')
