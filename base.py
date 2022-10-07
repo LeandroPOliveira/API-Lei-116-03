@@ -1,13 +1,13 @@
 from fastapi import FastAPI, Path
 from typing import List, Optional
-import pyodbc
+import sqlite3
 from pydantic import BaseModel
+
 
 app = FastAPI()
 
-lmdb = 'lista_servicos.accdb;'
-cnx = pyodbc.connect(r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'r'DBQ=' + lmdb)
-cursor = cnx.cursor()
+conn = sqlite3.connect('tabela_iss')
+cursor = conn.cursor()
 cursor.execute('select * from tabela_iss')
 desc = cursor.description
 results = [tuple(str(item) for item in i) for i in cursor.fetchall()]
