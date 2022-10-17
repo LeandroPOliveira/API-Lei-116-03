@@ -47,7 +47,7 @@ def get_item(
     if not search:
         return {'Error': 'Item does not exist'}
 
-    return {search[0]}
+    return search[0]
 
 
 @app.get('/por_descricao')
@@ -57,7 +57,7 @@ def get_item(descricao: Optional[str] = None):
     if not search:
         return {'item': 'Does not exist'}
 
-    return {search[0]}
+    return search[0]
 
 
 @app.post('/create-item/{cod_serv}')
