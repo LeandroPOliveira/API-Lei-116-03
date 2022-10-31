@@ -32,11 +32,6 @@ class UpdateItem(BaseModel):
     iss: Optional[str] = None
 
 
-@app.get("/")
-def hello_world_root():
-    return {"Hello": "World"}
-
-
 @app.get('/get-item/{cod_servico}')
 def get_item(
         cod_servico: str = Path(
