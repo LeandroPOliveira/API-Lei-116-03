@@ -11,7 +11,7 @@
 | -------------  | --- |
 | :sparkles: Nome        | API Lei 116/03
 | :label: Tecnologias | Python
-| :rocket: URL         | https://api-lei116.herokuapp.com/
+| :rocket: URL         | https://api-lei116.onrender.com
 
 ![](https://github.com/LeandroPOliveira/API-Lei-116-03/blob/main/API-Docs.png#vitrinedev)
 
